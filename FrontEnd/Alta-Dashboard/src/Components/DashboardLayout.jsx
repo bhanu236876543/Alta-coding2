@@ -1,44 +1,85 @@
+import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import "./StudentDashboard.css";
+import "./DashboardLayout.css";
 
-const StudentDashboard = () => {
-  const { user } = useAuth();
+const DashboardLayout = () => {
+  const { user, logout } = useAuth();
 
   return (
-    <div className="student-dashboard">
-      <div className="dashboard-header">
-        <h1>Welcome, {user?.name}</h1>
-        <p>
-          Continue your coding journey and improve your problem-solving skills.
-        </p>
-      </div>
+    <div className="dashboard-container">
+      <nav className="dashboard-navbar">
+        <Link to="/" className="dashboard-logo">
+          CodeForge <span>AI</span>
+        </Link>
 
-      <div className="dashboard-cards">
-        <div className="dashboard-card">
-          <h3>Problems Solved</h3>
-          <p>0</p>
+        <div className="dashboard-user">
+          <div className="dashboard-user-info">
+            <span className="dashboard-user-name">
+              {user?.name || "User"}
+            </span>
+
+            <span className="dashboard-user-role">
+              {user?.role || "student"}
+            </span>
+          </div>
+
+          <button className="logout-btn" onClick={logout}>
+            Logout
+          </button>
         </div>
+      </nav>
 
-        <div className="dashboard-card">
-          <h3>Current Streak</h3>
-          <p>0 Days</p>
-        </div>
+      <div className="dashboard-body">
+        <aside className="dashboard-sidebar">
+          <p className="sidebar-title">Dashboard</p>
 
-        <div className="dashboard-card">
-          <h3>Problems Attempted</h3>
-          <p>0</p>
-        </div>
-      </div>
+          {user?.role === "student" && (
+            <>
+              <Link to="/student" className="sidebar-link">
+                Overview
+              </Link>
 
-      <div className="dashboard-section">
-        <h2>Start Coding</h2>
+              <Link to="/student/questions" className="sidebar-link">
+                Question Bank
+              </Link>
+            </>
+          )}
 
-        <p>Practice coding problems and build your problem-solving skills.</p>
+          {user?.role === "faculty" && (
+            <>
+              <Link to="/faculty" className="sidebar-link">
+                Overview
+              </Link>
 
-        <button>Explore Problems</button>
+              <Link to="/faculty/questions" className="sidebar-link">
+                Manage Questions
+              </Link>
+            </>
+          )}
+
+          {user?.role === "admin" && (
+            <>
+              <Link to="/admin" className="sidebar-link">
+                Overview
+              </Link>
+
+              <Link to="/admin/questions" className="sidebar-link">
+                Manage Questions
+              </Link>
+            </>
+          )}
+
+          <Link to="/account" className="sidebar-link">
+            Account
+          </Link>
+        </aside>
+
+        <main className="dashboard-content">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
 };
 
-export default StudentDashboard;
+export default DashboardLayout;

@@ -19,7 +19,8 @@
     "express": "^5.2.1",
     "googleapis": "^176.0.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.9.3"
+    "mongoose": "^9.9.3",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "jest": "^30.5.1",

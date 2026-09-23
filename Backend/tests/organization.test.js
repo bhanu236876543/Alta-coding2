@@ -16,20 +16,39 @@ describe("Organization Access Control", () => {
   beforeAll(async () => {
     await mongoose.connect(process.env.MONGO_URI);
 
-    user = await User.findOne({
-      email: "test@example.com",
+    user = await User.create({
+      name: "Test Student",
+      email: "test.org.student@example.com",
+      password: "password123",
+      role: "student"
     });
 
-    alta = await Organization.findOne({
-      slug: "alta",
+    alta = await Organization.create({
+      name: "Alta",
+      slug: "alta-test",
+      type: "university",
+      createdBy: user._id
     });
 
-    testOrg = await Organization.findOne({
-      slug: "test-org",
+    testOrg = await Organization.create({
+      name: "Test Org",
+      slug: "test-org-test",
+      type: "bootcamp",
+      createdBy: user._id
+    });
+
+    await OrganizationMember.create({
+      organization: alta._id,
+      user: user._id,
+      role: "student"
     });
   });
 
   afterAll(async () => {
+    if (user) await User.findByIdAndDelete(user._id);
+    if (alta) await Organization.findByIdAndDelete(alta._id);
+    if (testOrg) await Organization.findByIdAndDelete(testOrg._id);
+    if (user) await OrganizationMember.deleteMany({ user: user._id });
     await mongoose.connection.close();
   });
 

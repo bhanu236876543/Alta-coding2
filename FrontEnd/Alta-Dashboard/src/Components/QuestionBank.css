@@ -1,0 +1,147 @@
+.question-bank-page {
+  max-width: 1100px;
+}
+
+.question-bank-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.question-bank-header h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.question-bank-header p {
+  margin: 0;
+  color: #6b7280;
+}
+
+.question-count {
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #e8edff;
+  color: #1e3a8a;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.question-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.question-card-content {
+  min-width: 0;
+}
+
+.question-card h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.question-description {
+  margin: 0 0 16px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.question-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.difficulty {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.difficulty-easy {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.difficulty-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.difficulty-hard {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.topics {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.solve-button {
+  border: none;
+  border-radius: 7px;
+  padding: 11px 20px;
+  background: #111827;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.solve-button:hover {
+  background: #374151;
+}
+
+.empty-questions,
+.question-error {
+  padding: 40px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.empty-questions h2 {
+  margin-bottom: 10px;
+}
+
+.empty-questions p,
+.question-error {
+  color: #6b7280;
+}
+
+.question-error {
+  color: #b91c1c;
+}
+
+@media (max-width: 700px) {
+  .question-bank-header,
+  .question-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .solve-button {
+    width: 100%;
+  }
+}

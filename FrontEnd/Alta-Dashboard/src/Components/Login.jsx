@@ -9,9 +9,12 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     try {
       const response = await fetch("http://localhost:5001/api/auth/login", {
@@ -20,35 +23,52 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          email: email.trim(),
           password,
         }),
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+
+      let data;
+
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        throw new Error(
+          `Backend returned an invalid response. Status: ${response.status}`
+        );
+      }
+
+      console.log("Login response:", response.status, data);
 
       if (!response.ok) {
-        alert(data.message || "Login failed");
+        alert(data.message || `Login failed. Status: ${response.status}`);
         return;
       }
 
-      // Store JWT
-      localStorage.setItem("token", data.token);
+      if (!data.token || !data.user) {
+        alert("Login response is missing token or user information.");
+        return;
+      }
 
-      // Update AuthContext immediately
+      localStorage.setItem("token", data.token);
       setUser(data.user);
 
-      // Redirect based on role
       if (data.user.role === "student") {
         navigate("/student");
       } else if (data.user.role === "faculty") {
         navigate("/faculty");
       } else if (data.user.role === "admin") {
         navigate("/admin");
+      } else {
+        navigate("/");
       }
     } catch (error) {
-      console.error("Login error:", error);
-      alert("Something went wrong. Please try again.");
+      console.error("Complete login error:", error);
+      alert(`Login error: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +80,9 @@ const Login = () => {
         </div>
 
         <h2>Welcome Back</h2>
-        <p className="auth-subtitle">Login to continue solving problems.</p>
+        <p className="auth-subtitle">
+          Login to continue solving problems.
+        </p>
 
         <form onSubmit={handleLogin}>
           <label>Email</label>
@@ -87,8 +109,8 @@ const Login = () => {
             <a href="/forgot-password">Forgot Password?</a>
           </div>
 
-          <button type="submit" className="auth-btn">
-            Login
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
@@ -99,7 +121,8 @@ const Login = () => {
         <button
           className="google-btn"
           onClick={() => {
-            window.location.href = "http://localhost:5001/api/auth/google";
+            window.location.href =
+              "http://localhost:5001/api/auth/google";
           }}
         >
           Continue with Google
