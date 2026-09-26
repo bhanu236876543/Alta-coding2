@@ -4,29 +4,36 @@ dotenv.config();
 const express = require("express");
 const cors = require("cors");
 
-const facultyRoutes = require("./routes/facultyRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-
 const connectDB = require("./config/db");
+
 const authRoutes = require("./routes/authRoutes");
 const questionRoutes = require("./routes/questionRoutes");
+const executionRoutes = require("./routes/executionRoutes");
 const testCaseRoutes = require("./routes/testCaseRoutes");
 const submissionRoutes = require("./routes/submissionRoutes");
+const facultyRoutes = require("./routes/facultyRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 
-// Faculty and admin routes
+// API Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/questions", questionRoutes);
+app.use("/api/execution", executionRoutes);
+app.use("/api/test-cases", testCaseRoutes);
+app.use("/api/submissions", submissionRoutes);
 app.use("/api/faculty", facultyRoutes);
 app.use("/api/admin", adminRoutes);
-
-// Database
-if (require.main === module) {
-  connectDB();
-}
 
 // Basic routes
 app.get("/", (req, res) => {
@@ -40,22 +47,12 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Authentication routes
-app.use("/api/auth", authRoutes);
-
-// Question routes
-app.use("/api/questions", questionRoutes);
-
-// Test-case routes
-app.use("/api/test-cases", testCaseRoutes);
-
-// Submission routes
-app.use("/api/submissions", submissionRoutes);
-
-// Server
+// Database + Server
 const PORT = process.env.PORT || 5001;
 
 if (require.main === module) {
+  connectDB();
+
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });

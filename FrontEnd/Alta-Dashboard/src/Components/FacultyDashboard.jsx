@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:5001/api";
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 const FacultyDashboard = () => {
   const [questions, setQuestions] = useState([]);
@@ -45,7 +45,13 @@ const FacultyDashboard = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setQuestions(data.questions || data);
+        setQuestions(
+          Array.isArray(data.questions)
+            ? data.questions
+            : Array.isArray(data)
+            ? data
+            : []
+        );
       } else {
         setMessage(data.message || "Failed to load questions");
       }
@@ -647,4 +653,4 @@ const styles = {
   },
 };
 
-export default FacultyDashboard
+export default FacultyDashboard;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const QuestionBank = () => {
   const navigate = useNavigate();
@@ -14,13 +14,13 @@ const QuestionBank = () => {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:5001/api/questions",
+          `${import.meta.env.VITE_API_URL}/api/questions/`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         const data = await response.json();
@@ -29,11 +29,15 @@ const QuestionBank = () => {
           throw new Error(data.message || "Failed to fetch questions");
         }
 
-        const questionList =
-          data.questions ||
-          data.data ||
-          data.results ||
-          (Array.isArray(data) ? data : []);
+        const questionList = Array.isArray(data.questions)
+          ? data.questions
+          : Array.isArray(data.data)
+            ? data.data
+            : Array.isArray(data.results)
+              ? data.results
+              : Array.isArray(data)
+                ? data
+                : [];
 
         setQuestions(questionList);
       } catch (err) {
@@ -60,9 +64,7 @@ const QuestionBank = () => {
       <div style={styles.container}>
         <h1>Question Bank</h1>
         <p style={styles.error}>{error}</p>
-        <button onClick={() => window.location.reload()}>
-          Try Again
-        </button>
+        <button onClick={() => window.location.reload()}>Try Again</button>
       </div>
     );
   }
@@ -77,10 +79,7 @@ const QuestionBank = () => {
           </p>
         </div>
 
-        <button
-          style={styles.backButton}
-          onClick={() => navigate("/student")}
-        >
+        <button style={styles.backButton} onClick={() => navigate("/student")}>
           Back to Dashboard
         </button>
       </div>
@@ -95,9 +94,7 @@ const QuestionBank = () => {
           {questions.map((question) => (
             <div key={question._id || question.id} style={styles.card}>
               <div style={styles.cardTop}>
-                <span style={styles.questionNumber}>
-                  Question
-                </span>
+                <span style={styles.questionNumber}>Question</span>
 
                 <span
                   style={{
@@ -105,8 +102,8 @@ const QuestionBank = () => {
                     ...(question.difficulty === "easy"
                       ? styles.easy
                       : question.difficulty === "hard"
-                      ? styles.hard
-                      : styles.medium),
+                        ? styles.hard
+                        : styles.medium),
                   }}
                 >
                   {question.difficulty || "Medium"}
@@ -121,7 +118,7 @@ const QuestionBank = () => {
                 {question.description || "No description available."}
               </p>
 
-              {question.topics && question.topics.length > 0 && (
+              {Array.isArray(question.topics) && question.topics.length > 0 && (
                 <div style={styles.topics}>
                   {question.topics.map((topic, index) => (
                     <span key={index} style={styles.topic}>
@@ -134,12 +131,7 @@ const QuestionBank = () => {
               <button
                 style={styles.solveButton}
                 onClick={() =>
-                  navigate("/student/coding", {
-                    state: {
-                      questionId: question._id || question.id,
-                      question,
-                    },
-                  })
+                  navigate(`/student/coding/${question._id || question.id}`)
                 }
               >
                 Solve Question
@@ -151,6 +143,8 @@ const QuestionBank = () => {
     </div>
   );
 };
+
+//style of cards and quesion stored in the same file using function
 
 const styles = {
   container: {

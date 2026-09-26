@@ -44,7 +44,7 @@ const getQuestionById = async (req, res) => {
 
     const question = await Question.findById(id).populate(
       "createdBy",
-      "name email"
+      "name email",
     );
 
     if (!question) {
@@ -155,8 +155,7 @@ const updateQuestion = async (req, res) => {
       });
     }
 
-    const isOwner =
-      question.createdBy.toString() === req.user.userId;
+    const isOwner = question.createdBy.toString() === req.user.userId;
 
     const isAdmin = req.user.role === "admin";
 
@@ -227,8 +226,7 @@ const deleteQuestion = async (req, res) => {
       });
     }
 
-    const isOwner =
-      question.createdBy.toString() === req.user.userId;
+    const isOwner = question.createdBy.toString() === req.user.userId;
 
     const isAdmin = req.user.role === "admin";
 

@@ -1,11 +1,12 @@
+import CodeRunner from "../Components/CodeRunner";
 import { Routes, Route } from "react-router-dom";
-
 import Home from "../Components/Home";
 import Login from "../Components/Login";
 import Register from "../Components/Register";
 import AuthSuccess from "../Components/AuthSuccess";
 import Account from "../Components/Account";
 import ManageTestCases from "../Components/ManageTestCases";
+import QuestionPage from "../Pages/QuestionPage";
 import StudentDashboard from "../Components/StudentDashboard";
 import CodingPlatform from "../Components/CodingPlatform";
 import QuestionBank from "../Components/QuestionBank";
@@ -30,6 +31,10 @@ const AppRoutes = () => {
 
       <Route path="/auth/success" element={<AuthSuccess />} />
 
+      <Route path="/code-runner" element={<CodeRunner />} />
+
+      <Route path="/question/:id" element={<QuestionPage />} />
+
       {/* Dashboard routes */}
       <Route element={<DashboardLayout />}>
         {/* Student dashboard */}
@@ -41,7 +46,6 @@ const AppRoutes = () => {
             </RoleRoute>
           }
         />
-
 
         {/* Student question bank */}
         <Route
@@ -65,7 +69,7 @@ const AppRoutes = () => {
 
         {/* Student coding platform */}
         <Route
-          path="/student/coding"
+          path="/student/coding/:questionId"
           element={
             <RoleRoute allowedRole="student">
               <CodingPlatform />
@@ -92,7 +96,7 @@ const AppRoutes = () => {
             </RoleRoute>
           }
         />
-        
+
         {/* Faculty edit question */}
         <Route
           path="/faculty/questions/:questionId/edit"
@@ -104,14 +108,14 @@ const AppRoutes = () => {
         />
 
         {/* Faculty test case management */}
-<Route
-  path="/faculty/questions/:questionId/test-cases"
-  element={
-    <RoleRoute allowedRole="faculty">
-      <ManageTestCases />
-    </RoleRoute>
-  }
-/>
+        <Route
+          path="/faculty/questions/:questionId/test-cases"
+          element={
+            <RoleRoute allowedRole="faculty">
+              <ManageTestCases />
+            </RoleRoute>
+          }
+        />
         {/* Admin dashboard */}
         <Route
           path="/admin"

@@ -1,5 +1,4 @@
 const OrganizationMember = require("../models/OrganizationMember");
-
 const organizationAccess = async (req, res, next) => {
   try {
     if (!req.user) {

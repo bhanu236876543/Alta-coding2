@@ -16,8 +16,8 @@ const Home = () => {
 
         {/* Navigation Links */}
         <div className="nav-links">
-          <a href="/">Home</a>
-          <a href="/problems">Problems</a>
+          <Link to="/">Home</Link>
+          <Link to="/questions">Problems</Link>
         </div>
 
         {/* Search */}
@@ -64,13 +64,13 @@ const Home = () => {
           </p>
 
           <div className="hero-buttons">
-            <a href="/problems" className="start-btn">
+            <Link to="/questions" className="start-btn">
               Start Solving →
-            </a>
+            </Link>
 
-            <a href="/problems" className="explore-btn">
+            <Link to="/questions" className="explore-btn">
               Explore Problems
-            </a>
+            </Link>
           </div>
         </div>
 

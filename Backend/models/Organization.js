@@ -19,7 +19,7 @@ const organizationSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false, // i have changes the mandate to existance of an orgaisation first
     },
   },
   {

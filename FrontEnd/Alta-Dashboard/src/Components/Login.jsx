@@ -17,16 +17,19 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+          }),
         },
-        body: JSON.stringify({
-          email: email.trim(),
-          password,
-        }),
-      });
+      );
 
       const responseText = await response.text();
 
@@ -36,7 +39,7 @@ const Login = () => {
         data = JSON.parse(responseText);
       } catch {
         throw new Error(
-          `Backend returned an invalid response. Status: ${response.status}`
+          `Backend returned an invalid response. Status: ${response.status}`,
         );
       }
 
@@ -80,9 +83,7 @@ const Login = () => {
         </div>
 
         <h2>Welcome Back</h2>
-        <p className="auth-subtitle">
-          Login to continue solving problems.
-        </p>
+        <p className="auth-subtitle">Login to continue solving problems.</p>
 
         <form onSubmit={handleLogin}>
           <label>Email</label>
@@ -121,8 +122,7 @@ const Login = () => {
         <button
           className="google-btn"
           onClick={() => {
-            window.location.href =
-              "http://localhost:5001/api/auth/google";
+            window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google`;
           }}
         >
           Continue with Google
