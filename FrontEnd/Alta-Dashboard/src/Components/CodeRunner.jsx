@@ -33,7 +33,7 @@ int main() {
 }`,
 };
 
-function CodeRunner({ question }) {
+function CodeRunner({ question, onSubmit }) {
   const [language, setLanguage] = useState("python");
   const [code, setCode] = useState(defaultCode.python);
   const [input, setInput] = useState(question?.sampleInput || "");
@@ -63,8 +63,9 @@ function CodeRunner({ question }) {
     try {
       const token = localStorage.getItem("token");
 
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/execution/run`,
+        `${apiUrl}/api/execution/run`,
         {
           method: "POST",
           headers: {
@@ -127,9 +128,17 @@ function CodeRunner({ question }) {
           ))}
         </select>
 
-        <button onClick={handleRun} disabled={loading}>
-          {loading ? "Running..." : "Run"}
-        </button>
+        <div>
+          <button onClick={handleRun} disabled={loading} style={{ marginRight: '10px' }}>
+            {loading ? "Running..." : "Run"}
+          </button>
+          
+          {onSubmit && (
+            <button className="submit-code-button" onClick={() => onSubmit({ code, language })} disabled={loading}>
+              Submit Code
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="editor-container">

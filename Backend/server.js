@@ -52,6 +52,7 @@ const PORT = process.env.PORT || 5001;
 
 if (require.main === module) {
   connectDB();
+  require("./services/workerService");
 
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
