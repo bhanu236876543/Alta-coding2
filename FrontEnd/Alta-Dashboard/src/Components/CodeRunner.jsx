@@ -63,8 +63,9 @@ function CodeRunner({ question }) {
     try {
       const token = localStorage.getItem("token");
 
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/execution/run`,
+        `${apiUrl}/api/execution/run`,
         {
           method: "POST",
           headers: {

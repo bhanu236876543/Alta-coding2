@@ -30,6 +30,7 @@ app.use("/api/execution", executionRoutes); // ← add this anywhere after the t
 // Database
 if (require.main === module) {
   connectDB();
+  require("./services/workerService");
 }
 
 // Basic routes

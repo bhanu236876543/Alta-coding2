@@ -83,7 +83,7 @@ for i in range(len(nums)):
     }
 
     setSubmitting(true);
-    setResult(null);
+    setResult({ status: "Queued", result: "Waiting for execution..." });
     setError("");
 
     try {
@@ -94,6 +94,7 @@ for i in range(len(nums)):
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+            "x-idempotency-key": window.crypto.randomUUID()
           },
           body: JSON.stringify({
             language,
@@ -106,14 +107,33 @@ for i in range(len(nums)):
 
       if (!response.ok) {
         setError(data.message || "Submission failed");
+        setSubmitting(false);
         return;
       }
 
       setResult(data.submission);
-      fetchSubmissions();
+      
+      const pollInterval = setInterval(async () => {
+        try {
+          const pollRes = await fetch(`${API_URL}/submissions/${data.submission._id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const pollData = await pollRes.json();
+          if (pollRes.ok) {
+            setResult(pollData);
+            if (pollData.status !== "pending" && pollData.status !== "running") {
+              clearInterval(pollInterval);
+              setSubmitting(false);
+              fetchSubmissions();
+            }
+          }
+        } catch (err) {
+          console.error("Polling error:", err);
+        }
+      }, 2000);
+
     } catch (err) {
       setError("Unable to submit code. Check whether the backend is running.");
-    } finally {
       setSubmitting(false);
     }
   };
